@@ -21,25 +21,16 @@ public class ProfileFragment extends Fragment {
     private  DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
-    @BindView(R.id.profile_name) protected TextView  mName;
-    @BindView(R.id.profile_bio) protected TextView   mBio;
-    @BindView(R.id.password) protected TextView   mPassword;
+    @BindView(R.id.profile_fname) protected TextView mFirstName;
+    @BindView(R.id.profile_lname) protected TextView mLastName;
+    @BindView(R.id.profile_bio) protected TextView mBio;
+    @BindView(R.id.password) protected TextView mPassword;
     @BindView(R.id.profile_teams) protected TextView mTeams;
-    @BindView(R.id.email) protected TextView   mEmail;
+    @BindView(R.id.email) protected TextView mEmail;
     @BindView(R.id.radio_group_i_am) RadioGroup mIam;
+    @BindView(R.id.radio_group_looking_for) RadioGroup mLookingFor;
 
-
-
-    /**
-     * need the following TextView
-         private String first_name;
-         private String last_name;
-         private boolean gender;
-         private boolean interest;
-         private int team_id;
-         private String position;
-         private String picture;
-     */
+    //TODO: add picture;
 
 
 
@@ -50,10 +41,11 @@ public class ProfileFragment extends Fragment {
     @OnClick (R.id.profile_save_button)
     public void saveSettings() {
         User user = new User();
-        user.setFirst_name(mName.toString());
-        user.setBio(mBio.toString());
-        user.setPw(mPassword.toString());
-        user.setEmail(mEmail.toString());
+        user.setFirst_name(mFirstName.getText().toString());
+        user.setLast_name(mLastName.getText().toString());
+        user.setBio(mBio.getText().toString());
+        user.setPw(mPassword.getText().toString());
+        user.setEmail(mEmail.getText().toString());
         switch (mIam.getCheckedRadioButtonId()) {
             case R.id.i_am_man:
                 user.setGender(1);
@@ -63,6 +55,14 @@ public class ProfileFragment extends Fragment {
                 break;
         }
 
+        switch (mLookingFor.getCheckedRadioButtonId()) {
+            case R.id.looking_for_woman:
+                user.setInterest(0);
+                break;
+            case R.id.looking_for_man:
+                user.setInterest(1);
+                break;
+        }
     }
 
     @Override
