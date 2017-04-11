@@ -3,23 +3,45 @@ package samletcher.huckordump;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ProfileFragment extends Fragment {
+    public final static String I_AM_MAN = "I AM MAN";
+
+    private  DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.profile_name) protected TextView  mName;
-    @BindView(R.id.profile_age) protected  TextView  mAge;
-    @BindView(R.id.profile_teams) protected TextView mTeams;
     @BindView(R.id.profile_bio) protected TextView   mBio;
+    @BindView(R.id.password) protected TextView   mPassword;
+    @BindView(R.id.profile_teams) protected TextView mTeams;
+    @BindView(R.id.email) protected TextView   mEmail;
+    @BindView(R.id.radio_group_i_am) RadioGroup mIam;
+
+
+
+    /**
+     * need the following TextView
+         private String first_name;
+         private String last_name;
+         private boolean gender;
+         private boolean interest;
+         private int team_id;
+         private String position;
+         private String picture;
+     */
+
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -27,12 +49,26 @@ public class ProfileFragment extends Fragment {
 
     @OnClick (R.id.profile_save_button)
     public void saveSettings() {
-        mName.getText();
+        User user = new User();
+        user.setFirst_name(mName.toString());
+        user.setBio(mBio.toString());
+        user.setPw(mPassword.toString());
+        user.setEmail(mEmail.toString());
+        switch (mIam.getCheckedRadioButtonId()) {
+            case R.id.i_am_man:
+                user.setGender(1);
+                break;
+            case R.id.i_am_woman:
+                user.setGender(0);
+                break;
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }

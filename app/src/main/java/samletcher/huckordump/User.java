@@ -18,9 +18,14 @@ public class User {
     private boolean interest;
     private int team_id;
     private String position;
+    private String bio;
     private String picture;
 
-    public User(int id, String email, String pw, String first_name, String last_name, boolean gender, boolean interest, int team_id, String position, String picture) {
+    public User() {
+
+    }
+
+    public User(int id, String email, String pw, String first_name, String last_name, boolean gender, boolean interest, int team_id, String position,  String picture) {
         this.id = id;
         this.email = email;
         this.pw = pw;
@@ -33,7 +38,7 @@ public class User {
         this.picture = picture;
     }
 
-    public User(int id, String email, String pw, String first_name, String last_name, int gender, int interest, int team_id, String position, String picture) {
+    public User(int id, String email, String pw, String first_name, String last_name, int gender, int interest, int team_id, String position, String bio, String picture) {
         this.id = id;
         this.email = email;
         this.pw = pw;
@@ -52,6 +57,7 @@ public class User {
 
         this.team_id = team_id;
         this.position = position;
+        this.bio = bio;
         this.picture = picture;
     }
 
@@ -85,6 +91,14 @@ public class User {
 
     public void setFirst_name(String first_name) {
         this.first_name = first_name;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public String getLast_name() {

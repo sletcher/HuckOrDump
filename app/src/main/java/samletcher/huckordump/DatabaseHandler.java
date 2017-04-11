@@ -36,7 +36,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_GENDER = "Gender";
     private static final String KEY_Interested_In = "InterestedIn";
     private static final String KEY_TEAM = "Team";
+    private static final String KEY_BIO = "Bio";
     private static final String KEY_POSITION = "Position";
+
     private static final String KEY_PICTURE = "Picture";
 
     public DatabaseHandler(Context context) {
@@ -51,11 +53,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 KEY_EM + " STRING " +
                 KEY_PW + " STRING " +
                 KEY_FIRST_NAME + " TEXT,"
-                + KEY_LAST_NAME + " TEXT" +
-                KEY_GENDER + " INTEGER" +
-                KEY_Interested_In + " INTEGER" +
-                KEY_TEAM + " INTEGER" +
-                KEY_POSITION + " TEXT" +
+                + KEY_LAST_NAME + " TEXT " +
+                KEY_GENDER + " INTEGER " +
+                KEY_Interested_In + " INTEGER " +
+                KEY_TEAM + " INTEGER " +
+                KEY_POSITION + " TEXT " +
+                KEY_BIO + " TEXT " +
                 KEY_PICTURE + " BLOB" +
                 ")";
         db.execSQL(CREATE_USER_TABLE);
@@ -110,6 +113,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_Interested_In, user.getInterestedIn());
         values.put(KEY_TEAM, user.getTeam_id());
         values.put(KEY_POSITION, user.getPosition());
+        values.put(KEY_BIO, user.getBio());
         values.put(KEY_PICTURE, user.getPicture());
 
         // insert the values for new user
@@ -147,9 +151,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 cursor.getString(4), // last name
                 Integer.parseInt(cursor.getString(5)), //gender
                 Integer.parseInt(cursor.getString(6)), // interest
-                Integer.parseInt(cursor.getString(7)), // team_id
+                Integer.parseInt(cursor.getString(7)),// team_id
                 cursor.getString(8), // position
-                cursor.getString(9));// picture
+                cursor.getString(9), // bio
+                cursor.getString(10));// picture
 
         return user;
     }
@@ -175,9 +180,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getString(4), // last name
                         Integer.parseInt(cursor.getString(5)), //gender
                         Integer.parseInt(cursor.getString(6)), // interest
-                        Integer.parseInt(cursor.getString(7)), // team_id
+                        Integer.parseInt(cursor.getString(7)),// team_id
                         cursor.getString(8), // position
-                        cursor.getString(9)));// picture
+                        cursor.getString(9), // bio
+                        cursor.getString(10))); // picture
             } while (cursor.moveToNext());
         }
 

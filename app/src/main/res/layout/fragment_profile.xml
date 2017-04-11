@@ -20,12 +20,7 @@
             android:hint="@string/name"
             android:inputType="textCapWords"/>
 
-        <EditText
-            android:id="@+id/profile_age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/age"
-            android:inputType="number"/>
+
         <EditText
             android:id="@+id/profile_id"
             android:layout_width="match_parent"
@@ -75,18 +70,19 @@
                 android:text="@string/i_am"/>
 
             <RadioButton
-                android:id="@+id/radio_man"
+                android:id="@+id/i_am_man"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/man"/>
             <RadioButton
-                android:id="@+id/button_2"
+                android:id="@+id/i_am_woman"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/woman"/>
         </RadioGroup>
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group_looking_for"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -95,15 +91,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/looking_for"/>
 
-            <RadioButton android:id="@+id/man"
+            <RadioButton android:id="@+id/looking_for_man"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/man"/>
-            <RadioButton android:id="@+id/radio_ninjas"
+            <RadioButton android:id="@+id/looking_for_woman"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/woman"/>
             <RadioButton
+                android:id="@+id/looking_for_both"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/both"/>
