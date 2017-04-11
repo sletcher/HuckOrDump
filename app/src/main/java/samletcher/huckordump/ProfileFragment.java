@@ -48,10 +48,10 @@ public class ProfileFragment extends Fragment {
         user.setEmail(mEmail.getText().toString());
         switch (mIam.getCheckedRadioButtonId()) {
             case R.id.i_am_man:
-                user.setGender(1);
+                user.setGender(0);
                 break;
             case R.id.i_am_woman:
-                user.setGender(0);
+                user.setGender(1);
                 break;
         }
 
