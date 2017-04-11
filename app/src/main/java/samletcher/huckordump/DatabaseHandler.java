@@ -70,7 +70,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // get the highest id
         String selectQuery = "SELECT " + KEY_ID +
                                 " FROM " + TABLE_Users +
-                                " ORDER BY " + KEY_ID + "DESC " +
+                                " ORDER BY " + KEY_ID + " DESC " +
                                 "LIMIT 1";
 
         // execute the query
