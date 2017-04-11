@@ -1,0 +1,30 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(date 1491933518000)
++++ app/src/main/AndroidManifest.xml	(revision )
+@@ -17,11 +17,21 @@
+         <activity
+             android:name=".LoginActivity"
+             android:label="@string/title_activity_login">
++<<<<<<< 0b314f9c0680dc7e909f90c8091ceb5f9a2bb343
++
++=======
++>>>>>>> added User object
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN"/>
+                 <category android:name="android.intent.category.LAUNCHER"/>
+             </intent-filter>
+         </activity>
++<<<<<<< 0b314f9c0680dc7e909f90c8091ceb5f9a2bb343
++
++        <activity android:name=".MainActivity"/>
++
++=======
++>>>>>>> added User object
+     </application>
+ 
+ </manifest>
+\ No newline at end of file
