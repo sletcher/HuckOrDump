@@ -6,6 +6,11 @@ package samletcher.huckordump;
 
 public class User {
     private int id;
+
+
+
+    private String email;
+    private String pw;
     private String first_name;
     private String last_name;
     // 0 is male, 1 is female
@@ -15,12 +20,36 @@ public class User {
     private String position;
     private String picture;
 
-    public User(int id, String first_name, String last_name, boolean gender, boolean interest, int team_id, String position, String picture) {
+    public User(int id, String email, String pw, String first_name, String last_name, boolean gender, boolean interest, int team_id, String position, String picture) {
         this.id = id;
+        this.email = email;
+        this.pw = pw;
         this.first_name = first_name;
         this.last_name = last_name;
         this.gender = gender;
         this.interest = interest;
+        this.team_id = team_id;
+        this.position = position;
+        this.picture = picture;
+    }
+
+    public User(int id, String email, String pw, String first_name, String last_name, int gender, int interest, int team_id, String position, String picture) {
+        this.id = id;
+        this.email = email;
+        this.pw = pw;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        if (gender == 1) {
+            this.gender = true;
+        } else {
+            this.gender = false;
+        }
+        if (interest == 1) {
+            this.interest = true;
+        } else {
+            this.interest = false;
+        }
+
         this.team_id = team_id;
         this.position = position;
         this.picture = picture;
@@ -32,6 +61,22 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPw() {
+        return pw;
+    }
+
+    public void setPw(String pw) {
+        this.pw = pw;
     }
 
     public String getFirst_name() {
@@ -66,6 +111,10 @@ public class User {
         this.gender = gender;
     }
 
+    public void setGender(int gender) {
+
+    }
+
     public boolean isInterest() {
         return interest;
     }
@@ -80,6 +129,14 @@ public class User {
 
     public void setInterest(boolean interest) {
         this.interest = interest;
+    }
+
+    public void setInterest(int interest) {
+        if (interest == 1) {
+            this.interest = true;
+        } else {
+            this.interest = false;
+        }
     }
 
     public int getTeam_id() {
