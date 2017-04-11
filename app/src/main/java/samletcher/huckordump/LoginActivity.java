@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // create a new database
         this.db = new DatabaseHandler(this);
         setContentView(R.layout.activity_login);
         // Set up the login form.
@@ -158,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
+        // will need to pass into the user we are going to be making
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
