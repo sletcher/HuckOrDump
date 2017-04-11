@@ -1,6 +1,8 @@
 package samletcher.huckordump;
 
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
@@ -61,6 +63,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    // Get highest id
+    public int getId() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // get the highest id
+        String selectQuery = "SELECT " + KEY_ID +
+                                " FROM " + TABLE_Users +
+                                " ORDER BY " + KEY_ID + "DESC " +
+                                "LIMIT 1";
+
+        // execute the query
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // if we get something back, the next highest id is the highest id + 1
+        if (cursor.moveToFirst()) {
+            return Integer.parseInt(cursor.getString(0)) + 1;
+        // otherwise return 0
+        } else {
+            return 0;
+        }
+    }
     // Adding a new User
     public void addUser(User user) {
         // get the database
@@ -69,6 +91,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // the value that we will eventually add
         ContentValues values = new ContentValues();
 
+        // add all the columns for the user while generating an id
+        // ideally will want to figure out a way to generate a better id
+        values.put(KEY_ID, getId());
         values.put(KEY_FIRST_NAME, user.getFirst_name());
         values.put(KEY_LAST_NAME, user.getLast_name());
         values.put(KEY_GENDER, user.getGender());
@@ -82,5 +107,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_Users, null, values);
         db.close();
     }
+
+
 
 }
