@@ -57,10 +57,10 @@ public class ProfileFragment extends Fragment {
 
         switch (mLookingFor.getCheckedRadioButtonId()) {
             case R.id.looking_for_woman:
-                user.setInterest(0);
+                user.setInterest(1);
                 break;
             case R.id.looking_for_man:
-                user.setInterest(1);
+                user.setInterest(0);
                 break;
         }
     }
