@@ -33,6 +33,10 @@
     <string name="woman">Woman</string>
     <string name="both">Both</string>
 
+    <!-- Strings related to Swipe Screen -->
+    <string name="huck">huck</string>
+    <string name="dump">dump</string>
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
