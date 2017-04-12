@@ -176,4 +176,11 @@ public class User {
     public void setPicture(String picture) {
         this.picture = picture;
     }
+
+    public void printUser() {
+        System.out.println("The user's name is " + this.first_name + " " + this.last_name);
+        System.out.println("The user plays the position: " + this.position);
+        System.out.println("The user has the following bio: \n" + this.bio);
+        System.out.println("The user's email is " + this.email);
+    }
 }
