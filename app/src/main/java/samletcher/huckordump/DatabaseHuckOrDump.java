@@ -1,22 +1,20 @@
 package samletcher.huckordump;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import samletcher.huckordump.User;
 
 /**
  * Created by iyudkovich on 4/11/17.
  */
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHuckOrDump {
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -40,42 +38,57 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_POSITION = "position";
     private static final String KEY_PICTURE = "picture";
 
-    public DatabaseHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    private DbHelper dbHelper;
+    private final Context ourContext;
+    private SQLiteDatabase ourDatabase;
+
+    private static class DbHelper extends SQLiteOpenHelper {
+        public DbHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        // Creating Tables
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            String CREATE_USER_TABLE = " CREATE TABLE " + TABLE_Users + " (" +
+                    KEY_ID + " INTEGER PRIMARY KEY," +
+                    KEY_EM + " STRING, " +
+                    KEY_PW + " STRING, " +
+                    KEY_FIRST_NAME + " TEXT," +
+                    KEY_LAST_NAME + " TEXT, " +
+                    KEY_GENDER + " INTEGER, " +
+                    KEY_Interested_In + " INTEGER, " +
+                    KEY_TEAM + " TEXT, " +
+                    KEY_POSITION + " TEXT, " +
+                    KEY_BIO + " TEXT, " +
+                    KEY_PICTURE + " BLOB" +
+                    ");";
+            db.execSQL(CREATE_USER_TABLE);
+        }
+
+        // Upgrading database
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            // Drop older table if existed
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_Users);
+
+            // Create tables again
+            onCreate(db);
+        }
     }
 
-    // Creating Tables
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_Users + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," +
-//                KEY_EM + " STRING " +
-//                KEY_PW + " STRING " +
-                KEY_FIRST_NAME + " TEXT,"
-                + KEY_LAST_NAME + " TEXT, " +
-                KEY_GENDER + " INTEGER, " +
-                KEY_Interested_In + " INTEGER, " +
-                KEY_TEAM + " TEXT, " +
-                KEY_POSITION + " TEXT, " +
-                KEY_BIO + " TEXT " +
-//                KEY_PICTURE + " BLOB" +
-                ")";
-        db.execSQL(CREATE_USER_TABLE);
+    public DatabaseHuckOrDump(Context c){
+        ourContext = c;
     }
-
-    // Upgrading database
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_Users);
-
-        // Create tables again
-        onCreate(db);
+    public DatabaseHuckOrDump open()throws SQLException {
+        dbHelper = new DbHelper(ourContext);
+        ourDatabase = dbHelper.getWritableDatabase();
+        return this;
     }
 
     // Get highest id
     public int getId() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // get the highest id
         String selectQuery = "SELECT " + KEY_ID +
@@ -96,7 +109,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Adding a new User
     public void addUser(User user) {
         // get the database
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         // the value that we will eventually add
         ContentValues values = new ContentValues();
@@ -122,7 +135,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public boolean userExists(String email) {
         // get the database
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // the query
         String query = "SELECT * FROM " + TABLE_Users
@@ -134,7 +147,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // reading a user by id
     public User getUser(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_Users, new String[] {KEY_ID, KEY_EM, KEY_PW, KEY_FIRST_NAME, KEY_LAST_NAME, KEY_GENDER, KEY_Interested_In, KEY_TEAM, KEY_POSITION, KEY_PICTURE},
                 KEY_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
@@ -167,7 +180,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_Users;
 
         // execute the query
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -195,7 +208,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // the query to get all the users from the table
         String query = "SELECT * FROM " + TABLE_Users;
         // connect to db
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         // execute the query
         Cursor cursor = db.rawQuery(query, null);
         cursor.close();

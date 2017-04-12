@@ -3,16 +3,15 @@ package samletcher.huckordump;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,7 +23,7 @@ public class ProfileFragment extends Fragment {
     public final static String I_AM_MAN = "I AM MAN";
 
     private Unbinder unbinder;
-    private DatabaseHandler db;
+    private DatabaseHuckOrDump db;
     private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.profile_fname) protected TextView mFirstName;
@@ -86,7 +85,12 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        db = new DatabaseHandler(getContext());
+        try {
+            db = new DatabaseHuckOrDump(getContext()).open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
