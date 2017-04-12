@@ -38,6 +38,11 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @OnClick (R.id.profile_admin_button)
+    public void checkDatabase() {
+        //TODO: Check the database
+    }
+
     @OnClick (R.id.profile_save_button)
     public void saveSettings() {
         User user = new User();
