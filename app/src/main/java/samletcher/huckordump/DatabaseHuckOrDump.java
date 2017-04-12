@@ -22,8 +22,11 @@ public class DatabaseHuckOrDump {
     // Database Name
     private static final String DATABASE_NAME = "HuckOrDump";
 
-    // Users table name
+    // table names
     private static final String TABLE_Users = "Users";
+    private static final String TABLE_TEAMS = "Teams";
+    private static final String TABLE_MESSAGES = "Messages";
+    private static final String TABLE_ACTIONS = "Actions";
 
     // Users Table Columns names
     private static final String KEY_ID = "id";
@@ -38,6 +41,25 @@ public class DatabaseHuckOrDump {
     private static final String KEY_POSITION = "position";
     private static final String KEY_PICTURE = "picture";
 
+    // messages table column names
+    private static final String KEY_UI = "user_id";
+    private static final String KEY_MN = "me_num";
+    private static final String KEY_mID = "match_id";
+    private static final String KEY_CDate = "created";
+    private static final String KEY_MText = "text";
+
+    // actions table column names
+    private static final String KEY_AID = "action_id";
+    private static final String KEY_AU1 = "user1";
+    private static final String KEY_AU2 = "user2";
+    private static final String KEY_ACTION = "action";
+
+    // teams table column names
+    private static final String KEY_TeamID = "team_id";
+    private static final String KEY_TName = "team_name";
+    private static final String KEY_DIV = "division";
+    private static final String KEY_CITY = "city";
+
     private DbHelper dbHelper;
     private final Context ourContext;
     private SQLiteDatabase ourDatabase;
@@ -50,6 +72,15 @@ public class DatabaseHuckOrDump {
         // Creating Tables
         @Override
         public void onCreate(SQLiteDatabase db) {
+
+            String CREATE_TEAM_TABLE = " CREATE TABLE " + TABLE_TEAMS + " (" +
+                    KEY_TeamID + " INTEGER PRIMARY KEY, " +
+                    KEY_TName + " STRING, " +
+                    KEY_DIV + " STRING, " +
+                    KEY_CITY + " STRING " +
+                    ");";
+            db.execSQL(CREATE_TEAM_TABLE);
+
             String CREATE_USER_TABLE = " CREATE TABLE " + TABLE_Users + " (" +
                     KEY_ID + " INTEGER PRIMARY KEY," +
                     KEY_EM + " STRING, " +
@@ -58,19 +89,43 @@ public class DatabaseHuckOrDump {
                     KEY_LAST_NAME + " TEXT, " +
                     KEY_GENDER + " INTEGER, " +
                     KEY_Interested_In + " INTEGER, " +
-                    KEY_TEAM + " TEXT, " +
+                    KEY_TEAM + " INTEGER, " +
                     KEY_POSITION + " TEXT, " +
                     KEY_BIO + " TEXT, " +
-                    KEY_PICTURE + " BLOB" +
-                    ");";
+                    KEY_PICTURE + " BLOB," +
+                    " FOREIGN KEY (" + KEY_TEAM +") REFERENCES " + TABLE_TEAMS + "(" + KEY_TeamID + "));";
             db.execSQL(CREATE_USER_TABLE);
+
+            String CREATE_MESSAGES_TABLE = " CREATE TABLE " + TABLE_MESSAGES + " (" +
+                    KEY_mID + " INTEGER PRIMARY KEY, " +
+                    KEY_UI + " INTEGER, " +
+                    KEY_MN + " INTEGER, " +
+                    KEY_CDate + " INTEGER, " +
+                    KEY_MText + " TEXT, " +
+                    " FOREIGN KEY (" + KEY_UI + ") REFERENCES " + TABLE_Users + "(" + KEY_ID + "));";
+            db.execSQL(CREATE_MESSAGES_TABLE);
+
+            String CREATE_ACTION_TABLE = " CREATE TABLE " + TABLE_ACTIONS + " (" +
+                    KEY_AID + " INTEGER PRIMARY KEY, " +
+                    KEY_AU1 + " INTEGER, " +
+                    KEY_AU2 + " INTEGER, " +
+                    KEY_ACTION + " INTEGER, " +
+                    " FOREIGN KEY (" + KEY_AU1 + ") REFERENCES " + TABLE_Users + "(" + KEY_ID +"), " +
+                    " FOREIGN KEY (" + KEY_AU2 + ") REFERENCES " + TABLE_Users + "(" + KEY_ID +"));";
+
+            db.execSQL(CREATE_ACTION_TABLE);
+
+
         }
 
         // Upgrading database
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            // Drop older table if existed
+            // Drop older tables if they exist
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTIONS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_Users);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEAMS);
 
             // Create tables again
             onCreate(db);
