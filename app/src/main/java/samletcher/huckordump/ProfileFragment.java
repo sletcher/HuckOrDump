@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -40,7 +42,11 @@ public class ProfileFragment extends Fragment {
 
     @OnClick (R.id.profile_admin_button)
     public void checkDatabase() {
-        //TODO: Check the database
+        // get all the users
+        List<User> users = this.db.getAllUsers();
+        for (User u: users) {
+            u.printUser();
+        }
     }
 
     @OnClick (R.id.profile_save_button)
