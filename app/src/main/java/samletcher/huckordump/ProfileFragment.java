@@ -74,6 +74,11 @@ public class ProfileFragment extends Fragment {
                 user.setInterest(0);
                 break;
         }
+        user.setTeam_id(0000);
+        user.setPosition("temp_position");
+
+        // add user to db
+        db.addUser(user);
     }
 
     @Override
