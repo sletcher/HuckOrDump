@@ -104,8 +104,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // add all the columns for the user while generating an id
         // ideally will want to figure out a way to generate a better id
         values.put(KEY_ID, getId());
-//        values.put(KEY_EM, user.getEmail());
-//        values.put(KEY_PW, user.getPw());
+        values.put(KEY_EM, (String) null);
+        values.put(KEY_PW, (String) null);
         values.put(KEY_FIRST_NAME, user.getFirst_name());
         values.put(KEY_LAST_NAME, user.getLast_name());
         values.put(KEY_GENDER, user.getGender());
@@ -113,7 +113,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TEAM, user.getTeam_id());
         values.put(KEY_POSITION, user.getPosition());
         values.put(KEY_BIO, user.getBio());
-//        values.put(KEY_PICTURE, user.getPicture());
+        values.put(KEY_PICTURE, (String) null);
 
         // insert the values for new user
         db.insert(TABLE_Users, null, values);
