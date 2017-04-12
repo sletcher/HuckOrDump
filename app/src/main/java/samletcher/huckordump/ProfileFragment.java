@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,26 +16,25 @@ import android.widget.TextView;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class ProfileFragment extends Fragment {
     public final static String I_AM_MAN = "I AM MAN";
 
-    private  DatabaseHandler db;
+    private Unbinder unbinder;
+    private DatabaseHandler db;
     private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.profile_fname) protected TextView mFirstName;
     @BindView(R.id.profile_lname) protected TextView mLastName;
     @BindView(R.id.profile_bio) protected TextView mBio;
-    @BindView(R.id.password) protected TextView mPassword;
     @BindView(R.id.profile_teams) protected TextView mTeams;
-    @BindView(R.id.email) protected TextView mEmail;
     @BindView(R.id.radio_group_i_am) RadioGroup mIam;
     @BindView(R.id.radio_group_looking_for) RadioGroup mLookingFor;
 
     //TODO: add picture;
-
-
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -55,8 +55,6 @@ public class ProfileFragment extends Fragment {
         user.setFirst_name(mFirstName.getText().toString());
         user.setLast_name(mLastName.getText().toString());
         user.setBio(mBio.getText().toString());
-        user.setPw(mPassword.getText().toString());
-        user.setEmail(mEmail.getText().toString());
         switch (mIam.getCheckedRadioButtonId()) {
             case R.id.i_am_man:
                 user.setGender(0);
@@ -79,14 +77,20 @@ public class ProfileFragment extends Fragment {
 
         // add user to db
         db.addUser(user);
+
+        Log.e("test", "Added new user");
+
+        db.addUser(user);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        db = new DatabaseHandler(getContext());
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override

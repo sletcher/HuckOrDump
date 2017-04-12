@@ -1,5 +1,7 @@
 package samletcher.huckordump;
 
+import android.util.Log;
+
 /**
  * Created by iyudkovich on 4/11/17.
  */
@@ -178,9 +180,9 @@ public class User {
     }
 
     public void printUser() {
-        System.out.println("The user's name is " + this.first_name + " " + this.last_name);
-        System.out.println("The user plays the position: " + this.position);
-        System.out.println("The user has the following bio: \n" + this.bio);
-        System.out.println("The user's email is " + this.email);
+        Log.d("test", "The user's name is " + this.first_name + " " + this.last_name);
+        Log.d("test", "The user plays the position: " + this.position);
+        Log.d("test", "The user has the following bio: \n" + this.bio);
+        Log.d("test", "The user's email is " + this.email);
     }
 }
