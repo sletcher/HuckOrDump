@@ -79,8 +79,6 @@ public class ProfileFragment extends Fragment {
         db.addUser(user);
 
         Log.e("test", "Added new user");
-
-        db.addUser(user);
     }
 
     @Override

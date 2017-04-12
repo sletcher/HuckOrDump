@@ -28,18 +28,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_Users = "Users";
 
     // Users Table Columns names
-    private static final String KEY_ID = "ID";
-    private static final String KEY_EM = "Email";
-    private static final String KEY_PW = "PW";
-    private static final String KEY_FIRST_NAME = "First Name";
-    private static final String KEY_LAST_NAME = "Last name";
-    private static final String KEY_GENDER = "Gender";
-    private static final String KEY_Interested_In = "InterestedIn";
-    private static final String KEY_TEAM = "Team";
-    private static final String KEY_BIO = "Bio";
-    private static final String KEY_POSITION = "Position";
-
-    private static final String KEY_PICTURE = "Picture";
+    private static final String KEY_ID = "id";
+    private static final String KEY_EM = "email";
+    private static final String KEY_PW = "pw";
+    private static final String KEY_FIRST_NAME = "first_name";
+    private static final String KEY_LAST_NAME = "last_name";
+    private static final String KEY_GENDER = "gender";
+    private static final String KEY_Interested_In = "interested_in";
+    private static final String KEY_TEAM = "team";
+    private static final String KEY_BIO = "bio";
+    private static final String KEY_POSITION = "position";
+    private static final String KEY_PICTURE = "picture";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,16 +49,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_Users + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," +
-                KEY_EM + " STRING " +
-                KEY_PW + " STRING " +
+//                KEY_EM + " STRING " +
+//                KEY_PW + " STRING " +
                 KEY_FIRST_NAME + " TEXT,"
-                + KEY_LAST_NAME + " TEXT " +
-                KEY_GENDER + " INTEGER " +
-                KEY_Interested_In + " INTEGER " +
-                KEY_TEAM + " INTEGER " +
-                KEY_POSITION + " TEXT " +
+                + KEY_LAST_NAME + " TEXT, " +
+                KEY_GENDER + " INTEGER, " +
+                KEY_Interested_In + " INTEGER, " +
+                KEY_TEAM + " TEXT, " +
+                KEY_POSITION + " TEXT, " +
                 KEY_BIO + " TEXT " +
-                KEY_PICTURE + " BLOB" +
+//                KEY_PICTURE + " BLOB" +
                 ")";
         db.execSQL(CREATE_USER_TABLE);
     }
@@ -117,7 +116,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        values.put(KEY_PICTURE, user.getPicture());
 
         // insert the values for new user
-        db.insert(TABLE_Users, "Bio", values);
+        db.insert(TABLE_Users, null, values);
         db.close();
     }
 
