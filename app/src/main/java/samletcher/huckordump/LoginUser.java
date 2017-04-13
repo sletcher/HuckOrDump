@@ -4,12 +4,12 @@ package samletcher.huckordump;
  * Created by iyudkovich on 4/12/17.
  */
 
-public class BasicUser {
+public class LoginUser {
     private int id;
     private String email;
     private String pw;
 
-    public BasicUser(int id, String email, String pw) {
+    public LoginUser(int id, String email, String pw) {
         this.id = id;
         this.email = email;
         this.pw = pw;
@@ -37,5 +37,23 @@ public class BasicUser {
 
     public void setPw(String pw) {
         this.pw = pw;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LoginUser loginUser = (LoginUser) o;
+
+        if (id != loginUser.id) return false;
+        if (!email.equals(loginUser.email)) return false;
+        return pw.equals(loginUser.pw);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return pw.hashCode();
     }
 }

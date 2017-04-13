@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
+import android.util.Log;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class DatabaseHuckOrDump {
     private static final String TABLE_TEAMS = "Teams";
     private static final String TABLE_MESSAGES = "Messages";
     private static final String TABLE_ACTIONS = "Actions";
+    private static final String TABLE_LOGIN = "Login";
 
     // Users Table Columns names
     private static final String KEY_ID = "id";
@@ -60,6 +62,8 @@ public class DatabaseHuckOrDump {
     private static final String KEY_DIV = "division";
     private static final String KEY_CITY = "city";
 
+
+
     private DbHelper dbHelper;
     private final Context ourContext;
     private SQLiteDatabase ourDatabase;
@@ -72,6 +76,14 @@ public class DatabaseHuckOrDump {
         // Creating Tables
         @Override
         public void onCreate(SQLiteDatabase db) {
+
+            // create login table
+            String CREATE_LOGIN_TABLE = " CREATE TABLE " + TABLE_LOGIN + " (" +
+                    KEY_ID + " INTEGER PRIMARY KEY, " +
+                    KEY_EM + " STRING, " +
+                    KEY_PW + " STRING);";
+
+            db.execSQL(CREATE_LOGIN_TABLE);
 
             String CREATE_TEAM_TABLE = " CREATE TABLE " + TABLE_TEAMS + " (" +
                     KEY_TeamID + " INTEGER PRIMARY KEY, " +
@@ -122,6 +134,7 @@ public class DatabaseHuckOrDump {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // Drop older tables if they exist
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTIONS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_Users);
@@ -161,6 +174,51 @@ public class DatabaseHuckOrDump {
             return 0;
         }
     }
+
+    public void addLogInUser(LoginUser user) {
+        // get the database
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // the value that we will eventually add
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_ID, user.getId());
+        values.put(KEY_EM, user.getEmail());
+        values.put(KEY_PW, user.getPw());
+
+        db.insert(TABLE_LOGIN, null, values);
+        Log.e("database", "added user to login database");
+        db.close(); // close the connection
+    }
+
+    // add a team
+    public void addTeam(Team team) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_TeamID, team.getTeam_id());
+        values.put(KEY_DIV, team.getDivision());
+        values.put(KEY_CITY, team.getCity());
+        values.put(KEY_TName, team.getTeam_name());
+
+        db.insert(TABLE_TEAMS, null, values);
+        db.close(); // close the connection
+    }
+
+    // add message
+    public void addMessage(Message message) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_mID, message.getMessage_id());
+        values.put(KEY_UI, message.getUser_id());
+        values.put(KEY_MText, message.getText());
+        values.put(KEY_CDate, message.getCreated());
+        values.put(KEY_MN, message.getMessageNumber());
+    }
+
     // Adding a new User
     public void addUser(User user) {
         // get the database
@@ -187,6 +245,7 @@ public class DatabaseHuckOrDump {
         db.insert(TABLE_Users, null, values);
         db.close();
     }
+
 
     public boolean userExists(String email) {
         // get the database
@@ -225,6 +284,8 @@ public class DatabaseHuckOrDump {
 
         return user;
     }
+
+
 
 
     // get all the users

@@ -30,8 +30,10 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_lname) protected TextView mLastName;
     @BindView(R.id.profile_bio) protected TextView mBio;
     @BindView(R.id.profile_teams) protected TextView mTeams;
+    @BindView(R.id.profile_id) protected TextView mPid;
     @BindView(R.id.radio_group_i_am) RadioGroup mIam;
     @BindView(R.id.radio_group_looking_for) RadioGroup mLookingFor;
+    @BindView(R.id.position_id) TextView mPosition;
 
     //TODO: add picture;
 
@@ -71,8 +73,8 @@ public class ProfileFragment extends Fragment {
                 user.setInterest(0);
                 break;
         }
-        user.setTeam_id(0000);
-        user.setPosition("temp_position");
+        user.setTeam_id(Integer.parseInt(mPid.getText().toString()));
+        user.setPosition(mPosition.getText().toString());
 
         // add user to db
         db.addUser(user);
