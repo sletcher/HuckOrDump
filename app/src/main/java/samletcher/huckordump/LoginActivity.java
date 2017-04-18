@@ -348,7 +348,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            LoginUser loginUser = db.getLoginUserFromEmail(mEmail);
+            LoginUser loginUser = db.getLoginUserFromEmail(mEmail, mPassword);
+
 
             if (loginUser.getPw().equals(mPassword)) {
                 SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);

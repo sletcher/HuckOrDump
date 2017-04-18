@@ -396,7 +396,6 @@ public class DatabaseHuckOrDump {
 
 
         if (cursor.getCount()> 0) {
-            Log.e("test", String.valueOf(cursor.getCount()));
             cursor.moveToFirst(); // move to the first object that matches the email
             LoginUser user = new LoginUser(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1),
@@ -407,6 +406,22 @@ public class DatabaseHuckOrDump {
         } else {
             return  new LoginUser(getUserId(), email, "");
         }
+
+    }
+
+    // update the login User
+    public void updateLogInUserPW(LoginUser user, String pw) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_UI, user.getId());
+        values.put(KEY_EM, user.getEmail());
+        values.put(KEY_PW, pw); // update the pw
+
+        db.update(TABLE_LOGIN, values, KEY_UI + "= ?", new String[]{String.valueOf(user.getId())});
+        Log.e("update", "updated loginpw for loginuser");
+        db.close();
 
     }
 
