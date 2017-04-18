@@ -203,7 +203,10 @@ public class DatabaseHuckOrDump {
         values.put(KEY_TName, team.getTeam_name());
 
         db.insert(TABLE_TEAMS, null, values);
+        Log.e("database", "added team to team database");
         db.close(); // close the connection
+
+
     }
 
     // add message
@@ -217,6 +220,10 @@ public class DatabaseHuckOrDump {
         values.put(KEY_MText, message.getText());
         values.put(KEY_CDate, message.getCreated());
         values.put(KEY_MN, message.getMessageNumber());
+
+        db.insert(TABLE_MESSAGES, null, values);
+        Log.e("database", "added message to message database");
+        db.close();
     }
 
     // Adding a new User
@@ -243,6 +250,7 @@ public class DatabaseHuckOrDump {
 
         // insert the values for new user
         db.insert(TABLE_Users, null, values);
+        Log.e("database", "added user to user database");
         db.close();
     }
 
