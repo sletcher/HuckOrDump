@@ -45,7 +45,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
     public static final String INTENT_EXTRA_IS_REGISTER = "INTENT_EXTRA_IS_REGISTER";
-    public static final String INTENT_EXTRA_USER_ID = "INTENT_EXTRA_USER_ID";
+    public static final String SHARED_PREF_USER_ID = "SHARED_PREF_USER_ID";
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -348,12 +348,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            if (db.getLoginInformation(mEmail).equals(mPassword)) {
+            LoginUser loginUser = db.getLoginUserFromEmail(mEmail);
+
+            if (loginUser.getPw().equals(mPassword)) {
                 SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt(SHARED_PREF_USER_ID, );
-                editor.commit();
+                editor.putInt(SHARED_PREF_USER_ID, loginUser.getId());
+                editor.apply();
+                return true;
             }
+
+            return false;
         }
 
         @Override
@@ -365,7 +370,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra(INTENT_EXTRA_IS_REGISTER, false);
-                intent.putExtra(Intent.EXTRA_USER, );
                 LoginActivity.this.startActivity(intent);
             } else {
                 Toast toast = Toast.makeText(mActivity, mActivity.getString(R.string.login_failed), Toast.LENGTH_SHORT);

@@ -1,6 +1,7 @@
 package samletcher.huckordump;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,32 +49,31 @@ public class ProfileFragment extends Fragment {
 
     @OnClick (R.id.profile_save_button)
     public void saveSettings() {
-        User user = new User();
-        user.setFirst_name(mFirstName.getText().toString());
-        user.setLast_name(mLastName.getText().toString());
-        user.setBio(mBio.getText().toString());
+        mUser.setFirst_name(mFirstName.getText().toString());
+        mUser.setLast_name(mLastName.getText().toString());
+        mUser.setBio(mBio.getText().toString());
         switch (mIam.getCheckedRadioButtonId()) {
             case R.id.i_am_man:
-                user.setGender(0);
+                mUser.setGender(0);
                 break;
             case R.id.i_am_woman:
-                user.setGender(1);
+                mUser.setGender(1);
                 break;
         }
 
         switch (mLookingFor.getCheckedRadioButtonId()) {
             case R.id.looking_for_woman:
-                user.setInterest(1);
+                mUser.setInterest(1);
                 break;
             case R.id.looking_for_man:
-                user.setInterest(0);
+                mUser.setInterest(0);
                 break;
         }
-        user.setTeam_id(Integer.parseInt(mPid.getText().toString()));
-        user.setPosition(mPosition.getText().toString());
+        mUser.setTeam_id(Integer.parseInt(mPid.getText().toString()));
+        mUser.setPosition(mPosition.getText().toString());
 
         // add user to db
-        db.addUser(user);
+        db.updateUser(mUser);
 
         Log.e("test", "Added new user");
     }
@@ -89,8 +89,11 @@ public class ProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        int id = sharedPref.getInt(LoginActivity.SHARED_PREF_USER_ID, 0);
 
         mUser = db.getUser(id);
+        updateFields(mUser);
 
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -126,5 +129,14 @@ public class ProfileFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void updateFields(User user) {
+        mFirstName.setText(user.getFirst_name());
+        mLastName.setText(user.getLast_name());
+        mBio.setText(user.getBio());
+        mIam.check(user.getGender());
+        mLookingFor.check(user.getInterestedIn());
+        mPosition.setText(user.getPosition());
     }
 }

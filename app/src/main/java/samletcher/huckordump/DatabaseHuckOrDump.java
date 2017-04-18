@@ -389,8 +389,8 @@ public class DatabaseHuckOrDump {
     public LoginUser getLoginUserFromEmail(String email) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String query =  "SELECT * FROM" + TABLE_LOGIN +
-                        " WHERE " + KEY_EM + " =" + email;
+        String query =  "SELECT * FROM " + TABLE_LOGIN +
+                        " WHERE " + KEY_EM + " = '" + email + "'";
 
         Cursor cursor = db.rawQuery(query, null);
 
