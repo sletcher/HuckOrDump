@@ -163,7 +163,7 @@ public class DatabaseHuckOrDump {
         String selectQuery = "SELECT " + KEY_ID +
                                 " FROM " + TABLE_Users +
                                 " ORDER BY " + KEY_ID + " DESC " +
-                                "LIMIT 1";
+                                "LIMIT 1;";
 
         // execute the query
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -238,7 +238,7 @@ public class DatabaseHuckOrDump {
         // select all from the team table that have the id
         String query = "SELECT * FROM " + TABLE_TEAMS +
                         " WHERE " + KEY_TeamID +
-                        "= " + String.valueOf(team_id);
+                        "= " + String.valueOf(team_id) + ";";
 
         // execute the query
         Cursor cursor = db.rawQuery(query, null);
@@ -339,7 +339,7 @@ public class DatabaseHuckOrDump {
 
         // the query
         String query = "SELECT * FROM " + TABLE_Users
-                +  " WHERE Email = " + email;
+                +  " WHERE " + KEY_EM + " = " + email + ";";
 
         Cursor cursor = db.rawQuery(query, null);
         return cursor != null;
@@ -353,7 +353,7 @@ public class DatabaseHuckOrDump {
 
         // the query
         String query = "SELECT * FROM " + TABLE_Users
-                +  " WHERE " + KEY_UI +  " = " + String.valueOf(id);
+                +  " WHERE " + KEY_UI +  " = " + String.valueOf(id) +";";
 
         Cursor cursor = db.rawQuery(query, null);
         return cursor != null;
@@ -390,12 +390,13 @@ public class DatabaseHuckOrDump {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String query =  "SELECT * FROM " + TABLE_LOGIN +
-                        " WHERE " + KEY_EM + " = '" + email + "'";
+                        " WHERE " + KEY_EM + " = '" + email + "';";
 
         Cursor cursor = db.rawQuery(query, null);
 
 
-        if (cursor != null) {
+        if (cursor.getCount()> 0) {
+            Log.e("test", String.valueOf(cursor.getCount()));
             cursor.moveToFirst(); // move to the first object that matches the email
             LoginUser user = new LoginUser(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1),
@@ -404,7 +405,7 @@ public class DatabaseHuckOrDump {
             db.close();
             return user;
         } else {
-            return  new LoginUser(getUserId(), email, (String) null);
+            return  new LoginUser(getUserId(), email, "");
         }
 
     }
@@ -455,7 +456,7 @@ public class DatabaseHuckOrDump {
     // get number of users
     public int getNumberOfUsers() {
         // the query to get all the users from the table
-        String query = "SELECT * FROM " + TABLE_Users;
+        String query = "SELECT * FROM " + TABLE_Users +";";
         // connect to db
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         // execute the query
