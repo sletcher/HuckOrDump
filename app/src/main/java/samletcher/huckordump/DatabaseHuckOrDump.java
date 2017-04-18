@@ -438,7 +438,7 @@ public class DatabaseHuckOrDump {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         // delete the user based off user_id
-        db.delete(TABLE_Users, KEY_UI + " = ?", new String[] {String.valueOf(user.getId())});
+        db.delete(TABLE_Users, KEY_ID + " = ?", new String[] {String.valueOf(user.getId())});
         Log.e("database", "delete user from users table with id " + String.valueOf(user.getId()));
         db.close();
     }
