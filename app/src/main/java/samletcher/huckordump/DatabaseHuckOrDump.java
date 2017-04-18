@@ -397,17 +397,15 @@ public class DatabaseHuckOrDump {
 
         if (cursor != null) {
             cursor.moveToFirst(); // move to the first object that matches the email
+            LoginUser user = new LoginUser(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2));
+
+            db.close();
+            return user;
+        } else {
+            return  new LoginUser(getUserId(), email, (String) null);
         }
-
-        LoginUser user = new LoginUser(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1),
-                cursor.getString(2));
-
-        db.close();
-
-        return user;
-
-
 
     }
 
