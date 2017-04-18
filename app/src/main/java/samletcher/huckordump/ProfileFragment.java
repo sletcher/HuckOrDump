@@ -78,6 +78,9 @@ public class ProfileFragment extends Fragment {
 
         // add user to db
         db.updateUser(mUser);
+        getActivity().finish();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        getActivity().startActivity(intent);
     }
 
     @OnClick (R.id.profile_admin_button)
