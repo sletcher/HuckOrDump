@@ -148,6 +148,7 @@ public class DatabaseHuckOrDump {
     public DatabaseHuckOrDump(Context c){
         ourContext = c;
     }
+
     public DatabaseHuckOrDump open()throws SQLException {
         dbHelper = new DbHelper(ourContext);
         ourDatabase = dbHelper.getWritableDatabase();
@@ -155,7 +156,7 @@ public class DatabaseHuckOrDump {
     }
 
     // Get highest id
-    public int getId() {
+    public int getUserId() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // get the highest id
@@ -191,20 +192,58 @@ public class DatabaseHuckOrDump {
         db.close(); // close the connection
     }
 
-    // add a team
-    public void addTeam(Team team) {
+    // add a team from a Team object
+
+    public void updateTeam(int team_id, Team team) {
+        if (teamExists(team_id)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_TeamID, team.getTeam_id());
+            values.put(KEY_DIV, team.getDivision());
+            values.put(KEY_CITY, team.getCity());
+            values.put(KEY_TName, team.getTeam_name());
+
+            // update the team
+            db.update(TABLE_TEAMS, values, KEY_TeamID + " = ?", new String[] {String.valueOf(team_id)});
+            Log.e("database", "added team to team database");
+            db.close(); // close the connection
+        } else {
+            addTeam(team_id);
+        }
+
+    }
+
+    // add a team with just an id
+    public void addTeam(int team_id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
-        values.put(KEY_TeamID, team.getTeam_id());
-        values.put(KEY_DIV, team.getDivision());
-        values.put(KEY_CITY, team.getCity());
-        values.put(KEY_TName, team.getTeam_name());
+        values.put(KEY_TeamID, team_id);
+        values.put(KEY_DIV, (String) null);
+        values.put(KEY_CITY, (String) null);
+        values.put(KEY_TName, (String) null);
 
         db.insert(TABLE_TEAMS, null, values);
         Log.e("database", "added team to team database");
         db.close(); // close the connection
+    }
+
+
+    // check to see if a team exists
+    public boolean teamExists(int team_id) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase(); // get the database
+
+        // select all from the team table that have the id
+        String query = "SELECT * FROM " + TABLE_TEAMS +
+                        " WHERE " + KEY_TeamID +
+                        "= " + String.valueOf(team_id);
+
+        // execute the query
+        Cursor cursor = db.rawQuery(query, null);
+
+        return cursor != null;
 
 
     }
@@ -236,14 +275,20 @@ public class DatabaseHuckOrDump {
 
         // add all the columns for the user while generating an id
         // ideally will want to figure out a way to generate a better id
-        values.put(KEY_ID, getId());
-        values.put(KEY_EM, (String) null);
-        values.put(KEY_PW, (String) null);
+        values.put(KEY_ID, getUserId());
+        values.put(KEY_EM, user.getEmail());
+        values.put(KEY_PW, user.getPw());
         values.put(KEY_FIRST_NAME, user.getFirst_name());
         values.put(KEY_LAST_NAME, user.getLast_name());
         values.put(KEY_GENDER, user.getGender());
         values.put(KEY_Interested_In, user.getInterestedIn());
         values.put(KEY_TEAM, user.getTeam_id());
+
+        // if the team doesn't exist
+        if (!teamExists(user.getTeam_id())) {
+            addTeam(user.getTeam_id());
+        }
+
         values.put(KEY_POSITION, user.getPosition());
         values.put(KEY_BIO, user.getBio());
         values.put(KEY_PICTURE, (String) null);
@@ -254,7 +299,35 @@ public class DatabaseHuckOrDump {
         db.close();
     }
 
+    public void updateUser(User user) {
+        // get the database
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        // the value that we will eventually add
+        ContentValues values = new ContentValues();
+
+        // add all the columns for the user while generating an id
+        // ideally will want to figure out a way to generate a better id
+        values.put(KEY_ID, getUserId());
+        values.put(KEY_EM, user.getEmail());
+        values.put(KEY_PW, user.getPw());
+        values.put(KEY_FIRST_NAME, user.getFirst_name());
+        values.put(KEY_LAST_NAME, user.getLast_name());
+        values.put(KEY_GENDER, user.getGender());
+        values.put(KEY_Interested_In, user.getInterestedIn());
+        values.put(KEY_TEAM, user.getTeam_id());
+        values.put(KEY_POSITION, user.getPosition());
+        values.put(KEY_BIO, user.getBio());
+        values.put(KEY_PICTURE, (String) null);
+
+        // insert the values for new user
+        db.update(TABLE_Users, values, KEY_UI + " = ?", new String[] {String.valueOf(getUserId())});
+        Log.e("database", "update user to user database");
+        db.close();
+    }
+
+
+    // returns whether a user exists already in the database
     public boolean userExists(String email) {
         // get the database
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -266,6 +339,7 @@ public class DatabaseHuckOrDump {
         Cursor cursor = db.rawQuery(query, null);
         return cursor != null;
     }
+
 
     // reading a user by id
     public User getUser(int id) {
@@ -293,7 +367,16 @@ public class DatabaseHuckOrDump {
         return user;
     }
 
+    // delete a user
+    public void deleteUser(User user) {
+        // connect to the db
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        // delete the user based off user_id
+        db.delete(TABLE_Users, KEY_UI + " = ?", new String[] {String.valueOf(user.getId())});
+        Log.e("database", "delete user from users table with id " + String.valueOf(user.getId()));
+        db.close();
+    }
 
 
     // get all the users
@@ -336,6 +419,8 @@ public class DatabaseHuckOrDump {
         // execute the query
         Cursor cursor = db.rawQuery(query, null);
         cursor.close();
+
+        Log.e("count", "There are now a total of " + cursor.getCount() + " users");
 
         return cursor.getCount();
     }

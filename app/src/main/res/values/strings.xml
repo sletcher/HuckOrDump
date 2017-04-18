@@ -34,6 +34,7 @@
     <string name="woman">Woman</string>
     <string name="both">Both</string>
     <string name="save">Save</string>
+    <string name="delete">Delete User</string>
 
     <!-- Strings related to Swipe Screen -->
     <string name="huck">huck</string>

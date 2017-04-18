@@ -20,11 +20,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class ProfileFragment extends Fragment {
-    public final static String I_AM_MAN = "I AM MAN";
-
     private Unbinder unbinder;
     private DatabaseHuckOrDump db;
     private OnFragmentInteractionListener mListener;
+    private User mUser;
 
     @BindView(R.id.profile_fname) protected TextView mFirstName;
     @BindView(R.id.profile_lname) protected TextView mLastName;
@@ -41,13 +40,10 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @OnClick (R.id.profile_admin_button)
+    @OnClick (R.id.profile_delete_button)
     public void checkDatabase() {
-        // get all the users
-        List<User> users = this.db.getAllUsers();
-        for (User u: users) {
-            u.printUser();
-        }
+        // delete the current user and log out
+        db.deleteUser(mUser);
     }
 
     @OnClick (R.id.profile_save_button)
@@ -92,6 +88,9 @@ public class ProfileFragment extends Fragment {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
+        mUser = db.getUser(id);
 
         unbinder = ButterKnife.bind(this, view);
         return view;
