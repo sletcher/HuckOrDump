@@ -19,6 +19,7 @@
         completions."
     </string>
     <string name="title_activity_settings">Settings</string>
+    <string name="login_failed">Sorry, that username and password combination does not exist!</string>
 
     <!-- Strings related to Profile -->
     <string name="fname">First Name</string>

@@ -367,6 +367,17 @@ public class DatabaseHuckOrDump {
         return user;
     }
 
+    public String[] getLoginUserFromEmail(String email) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String query =
+                "SELECT " + KEY_PW + ", " + KEY_ID +
+                " FROM " + TABLE_Users +
+                " WHERE " + KEY_EM + "=" + email;
+
+        //TODO login user
+    }
+
     // delete a user
     public void deleteUser(User user) {
         // connect to the db

@@ -8,9 +8,6 @@ import android.util.Log;
 
 public class User {
     private int id;
-
-
-
     private String email;
     private String pw;
     private String first_name;
