@@ -348,7 +348,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            LoginUser loginUser = db.getLoginUserFromEmail(mEmail, mPassword);
+            LoginUser loginUser = db.getLoginUserFromEmail(mEmail);
 
 
             if (loginUser.getPw().equals(mPassword)) {
@@ -370,7 +370,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra(INTENT_EXTRA_IS_REGISTER, false);
+                intent.putExtra(INTENT_EXTRA_IS_REGISTER, true);
                 LoginActivity.this.startActivity(intent);
             } else {
                 Toast toast = Toast.makeText(mActivity, mActivity.getString(R.string.login_failed), Toast.LENGTH_SHORT);

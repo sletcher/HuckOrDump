@@ -323,7 +323,7 @@ public class DatabaseHuckOrDump {
             values.put(KEY_PICTURE, (String) null);
 
             // insert the values for new user
-            db.update(TABLE_Users, values, KEY_UI + " = ?", new String[]{String.valueOf(getUserId())});
+            db.update(TABLE_Users, values, KEY_ID + " = ?", new String[]{String.valueOf(getUserId())});
             Log.e("database", "update user to user database");
             db.close();
         } else {
@@ -353,7 +353,7 @@ public class DatabaseHuckOrDump {
 
         // the query
         String query = "SELECT * FROM " + TABLE_Users
-                +  " WHERE " + KEY_UI +  " = " + String.valueOf(id) +";";
+                +  " WHERE " + KEY_ID +  " = " + String.valueOf(id) +";";
 
         Cursor cursor = db.rawQuery(query, null);
         return cursor != null;
@@ -367,21 +367,28 @@ public class DatabaseHuckOrDump {
         Cursor cursor = db.query(TABLE_Users, new String[] {KEY_ID, KEY_EM, KEY_PW, KEY_FIRST_NAME, KEY_LAST_NAME, KEY_GENDER, KEY_Interested_In, KEY_TEAM, KEY_POSITION, KEY_PICTURE},
                 KEY_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
+        User user = new User();
 
-        User user = new User(Integer.parseInt(cursor.getString(0)), // id
-                cursor.getString(1), // email
-                cursor.getString(2), // pw
-                cursor.getString(3), // first name
-                cursor.getString(4), // last name
-                Integer.parseInt(cursor.getString(5)), //gender
-                Integer.parseInt(cursor.getString(6)), // interest
-                Integer.parseInt(cursor.getString(7)),// team_id
-                cursor.getString(8), // position
-                cursor.getString(9), // bio
-                cursor.getString(10));// picture
+        if (cursor.getCount() > 0) {
+            Log.e("test", "count is greater than 0 when getting user");
+            cursor.moveToFirst();
+
+            user.setId(Integer.parseInt(cursor.getString(0))); // id
+            user.setEmail(cursor.getString(1)); // email
+            user.setPw(cursor.getString(2)); // pw
+            user.setFirst_name(cursor.getString(3)); // first name
+            user.setLast_name(cursor.getString(4)); // last name
+            user.setGender( Integer.parseInt(cursor.getString(5))); //gender
+            user.setInterest(Integer.parseInt(cursor.getString(6))); // interest
+            user.setTeam_id(Integer.parseInt(cursor.getString(7)));// team_id
+            user.setPosition(cursor.getString(8)); // position
+            user.setBio(cursor.getString(9)); // bio
+            user.setPicture(cursor.getString(10));// picture
+
+        } else {
+            Log.d("test", "couldn't get a user for selected id");
+            user.setId(id);
+        }
 
         return user;
     }

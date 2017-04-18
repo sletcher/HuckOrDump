@@ -21,6 +21,18 @@ public class User {
     private String picture;
 
     public User() {
+        this.id = -1;
+        this.email = "";
+        this.pw = "";
+        this.first_name = "";
+        this.last_name = "";
+        this.gender = false;
+        this.interest = false;
+        this.team_id = -1;
+        this.position = "";
+        this.bio = "";
+        this.picture = "";
+
 
     }
 

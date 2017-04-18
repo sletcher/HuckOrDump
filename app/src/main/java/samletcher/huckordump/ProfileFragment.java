@@ -132,11 +132,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateFields(User user) {
-        mFirstName.setText(user.getFirst_name());
-        mLastName.setText(user.getLast_name());
-        mBio.setText(user.getBio());
-        mIam.check(user.getGender());
-        mLookingFor.check(user.getInterestedIn());
-        mPosition.setText(user.getPosition());
+        if (user.getFirst_name() != "") {
+            mFirstName.setText(user.getFirst_name());
+            mLastName.setText(user.getLast_name());
+            mBio.setText(user.getBio());
+            mIam.check(user.getGender());
+            mLookingFor.check(user.getInterestedIn());
+            mPosition.setText(user.getPosition());
+        }
     }
 }
