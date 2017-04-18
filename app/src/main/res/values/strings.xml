@@ -19,6 +19,7 @@
         completions."
     </string>
     <string name="title_activity_settings">Settings</string>
+    <string name="register_failed">Sorry, but a user with that email already exists!</string>
     <string name="login_failed">Sorry, that username and password combination does not exist!</string>
 
     <!-- Strings related to Profile -->
@@ -35,7 +36,7 @@
     <string name="woman">Woman</string>
     <string name="both">Both</string>
     <string name="save">Save</string>
-    <string name="delete">Delete User</string>
+    <string name="delete">Delete</string>
 
     <!-- Strings related to Swipe Screen -->
     <string name="huck">huck</string>

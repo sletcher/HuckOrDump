@@ -339,10 +339,11 @@ public class DatabaseHuckOrDump {
 
         // the query
         String query = "SELECT * FROM " + TABLE_Users
-                +  " WHERE " + KEY_EM + " = " + email + ";";
+                +  " WHERE " + KEY_EM + " = '" + email + "';";
 
         Cursor cursor = db.rawQuery(query, null);
-        return cursor != null;
+        int count = cursor.getCount();
+        return count > 0;
     }
 
 
@@ -437,8 +438,10 @@ public class DatabaseHuckOrDump {
         // connect to the db
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // delete the user based off user_id
+        // delete the user based off user_id and its corresponding login user.
+        //TODO: Set this as a foreign key with CASCADE turned to on
         db.delete(TABLE_Users, KEY_ID + " = ?", new String[] {String.valueOf(user.getId())});
+        db.delete(TABLE_LOGIN, KEY_ID + " = ?", new String[] {String.valueOf(user.getId())});
         Log.e("database", "delete user from users table with id " + String.valueOf(user.getId()));
         db.close();
     }
@@ -446,7 +449,7 @@ public class DatabaseHuckOrDump {
 
     // get all the users
     public List<User> getAllUsers() {
-        List<User> userList = new ArrayList<User>();
+        List<User> userList = new ArrayList<>();
 
         // query to select all users
         String query = "SELECT * FROM " + TABLE_Users;

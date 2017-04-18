@@ -1,6 +1,7 @@
 package samletcher.huckordump;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +46,9 @@ public class ProfileFragment extends Fragment {
     public void checkDatabase() {
         // delete the current user and log out
         db.deleteUser(mUser);
+        getActivity().finish();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        getActivity().startActivity(intent);
     }
 
     @OnClick (R.id.profile_save_button)
@@ -74,8 +78,21 @@ public class ProfileFragment extends Fragment {
 
         // add user to db
         db.updateUser(mUser);
+    }
 
-        Log.e("test", "Added new user");
+    @OnClick (R.id.profile_admin_button)
+    public void adminButton() {
+        List<User> users = db.getAllUsers();
+        Log.e("Test", users.toString());
+    }
+
+    @OnClick (R.id.profile_logout_button)
+    public void logoutButton() {
+        getContext().getSharedPreferences(LoginActivity.SHARED_PREF_USER_ID, 0).edit().clear().apply();
+
+        getActivity().finish();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        getActivity().startActivity(intent);
     }
 
     @Override

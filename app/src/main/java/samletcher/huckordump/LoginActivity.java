@@ -59,10 +59,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -103,6 +99,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+
+        Button mEmailRegisterInButton = (Button) findViewById(R.id.email_register_button);
+        mEmailRegisterInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptRegister();
             }
         });
 
@@ -160,9 +164,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Store values at the time of the login attempt.
         // will need to pass into the user we are going to be making
@@ -172,8 +173,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Show a progress spinner, and kick off a background task to
         // perform the user login attempt.
         showProgress(true);
-        mAuthTask = new UserLoginTask(email, password, this);
-        mAuthTask.execute((Void) null);
+        new UserLoginTask(email, password, this).execute((Void) null);
     }
 
     /**
@@ -181,9 +181,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * and if none is found validate the email and password.
      */
     private void attemptRegister() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -223,8 +220,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password, this);
-            mAuthTask.execute((Void) null);
+            new UserRegisterTask(email, password, this).execute((Void) null);
         }
     }
 
@@ -350,7 +346,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             LoginUser loginUser = db.getLoginUserFromEmail(mEmail);
 
-
             if (loginUser.getPw().equals(mPassword)) {
                 SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -364,7 +359,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
             showProgress(false);
 
             if (success) {
@@ -380,7 +374,61 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    /**
+     * Represents an asynchronous login task used to authenticate
+     * the user.
+     */
+    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mEmail;
+        private final String mPassword;
+        private final Activity mActivity;
+
+        UserRegisterTask(String email, String password, Activity activity) {
+            mEmail = email;
+            mPassword = password;
+            mActivity = activity;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            if (db.userExists(mEmail)) {
+                return false;
+            }
+
+            LoginUser user = new LoginUser(db.getUserId(), mEmail, mPassword);
+            db.addLogInUser(user);
+
+            SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt(SHARED_PREF_USER_ID, user.getId());
+            editor.apply();
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            showProgress(false);
+
+            if (success) {
+                finish();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra(INTENT_EXTRA_IS_REGISTER, true);
+                LoginActivity.this.startActivity(intent);
+            } else {
+                Toast toast = Toast.makeText(mActivity, mActivity.getString(R.string.register_failed), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
             showProgress(false);
         }
     }
