@@ -306,24 +306,29 @@ public class DatabaseHuckOrDump {
         // the value that we will eventually add
         ContentValues values = new ContentValues();
 
-        // add all the columns for the user while generating an id
-        // ideally will want to figure out a way to generate a better id
-        values.put(KEY_ID, getUserId());
-        values.put(KEY_EM, user.getEmail());
-        values.put(KEY_PW, user.getPw());
-        values.put(KEY_FIRST_NAME, user.getFirst_name());
-        values.put(KEY_LAST_NAME, user.getLast_name());
-        values.put(KEY_GENDER, user.getGender());
-        values.put(KEY_Interested_In, user.getInterestedIn());
-        values.put(KEY_TEAM, user.getTeam_id());
-        values.put(KEY_POSITION, user.getPosition());
-        values.put(KEY_BIO, user.getBio());
-        values.put(KEY_PICTURE, (String) null);
+        if (userExists(user.getId())) {
 
-        // insert the values for new user
-        db.update(TABLE_Users, values, KEY_UI + " = ?", new String[] {String.valueOf(getUserId())});
-        Log.e("database", "update user to user database");
-        db.close();
+            // add all the columns for the user while generating an id
+            // ideally will want to figure out a way to generate a better id
+            values.put(KEY_ID, user.getId());
+            values.put(KEY_EM, user.getEmail());
+            values.put(KEY_PW, user.getPw());
+            values.put(KEY_FIRST_NAME, user.getFirst_name());
+            values.put(KEY_LAST_NAME, user.getLast_name());
+            values.put(KEY_GENDER, user.getGender());
+            values.put(KEY_Interested_In, user.getInterestedIn());
+            values.put(KEY_TEAM, user.getTeam_id());
+            values.put(KEY_POSITION, user.getPosition());
+            values.put(KEY_BIO, user.getBio());
+            values.put(KEY_PICTURE, (String) null);
+
+            // insert the values for new user
+            db.update(TABLE_Users, values, KEY_UI + " = ?", new String[]{String.valueOf(getUserId())});
+            Log.e("database", "update user to user database");
+            db.close();
+        } else {
+            addUser(user);
+        }
     }
 
 
@@ -334,7 +339,21 @@ public class DatabaseHuckOrDump {
 
         // the query
         String query = "SELECT * FROM " + TABLE_Users
-                    +  " WHERE Email = " + email;
+                +  " WHERE Email = " + email;
+
+        Cursor cursor = db.rawQuery(query, null);
+        return cursor != null;
+    }
+
+
+    // returns whether a user exists already in the database
+    public boolean userExists(int id) {
+        // get the database
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // the query
+        String query = "SELECT * FROM " + TABLE_Users
+                +  " WHERE " + KEY_UI +  " = " + String.valueOf(id);
 
         Cursor cursor = db.rawQuery(query, null);
         return cursor != null;
@@ -367,15 +386,29 @@ public class DatabaseHuckOrDump {
         return user;
     }
 
-    public String[] getLoginUserFromEmail(String email) {
+    public LoginUser getLoginUserFromEmail(String email) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String query =
-                "SELECT " + KEY_PW + ", " + KEY_ID +
-                " FROM " + TABLE_Users +
-                " WHERE " + KEY_EM + "=" + email;
+        String query =  "SELECT * FROM" + TABLE_LOGIN +
+                        " WHERE " + KEY_EM + " =" + email;
 
-        //TODO login user
+        Cursor cursor = db.rawQuery(query, null);
+
+
+        if (cursor != null) {
+            cursor.moveToFirst(); // move to the first object that matches the email
+        }
+
+        LoginUser user = new LoginUser(Integer.parseInt(cursor.getString(0)),
+                cursor.getString(1),
+                cursor.getString(2));
+
+        db.close();
+
+        return user;
+
+
+
     }
 
     // delete a user
