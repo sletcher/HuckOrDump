@@ -402,7 +402,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            LoginUser user = new LoginUser(db.getUserId(), mEmail, mPassword);
+            LoginUser user = new LoginUser(db.getLUserId(), mEmail, mPassword);
             db.addLogInUser(user);
 
             SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);

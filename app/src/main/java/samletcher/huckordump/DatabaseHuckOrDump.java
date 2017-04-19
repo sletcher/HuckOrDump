@@ -156,7 +156,7 @@ public class DatabaseHuckOrDump {
         return this;
     }
 
-    // Get highest id
+    // Get highest id for user
     public int getUserId() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -172,6 +172,27 @@ public class DatabaseHuckOrDump {
         if (cursor.moveToFirst()) {
             return Integer.parseInt(cursor.getString(0)) + 1;
         // otherwise return 0
+        } else {
+            return 0;
+        }
+    }
+
+    // Get highest id for login user
+    public int getLUserId() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // get the highest id
+        String selectQuery = "SELECT " + KEY_ID +
+                " FROM " + TABLE_LOGIN +
+                " ORDER BY " + KEY_ID + " DESC " +
+                "LIMIT 1;";
+
+        // execute the query
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // if we get something back, the next highest id is the highest id + 1
+        if (cursor.moveToFirst()) {
+            return Integer.parseInt(cursor.getString(0)) + 1;
+            // otherwise return 0
         } else {
             return 0;
         }
@@ -385,7 +406,7 @@ public class DatabaseHuckOrDump {
             user.setTeam_id(Integer.parseInt(cursor.getString(7)));// team_id
             user.setPosition(cursor.getString(8)); // position
             user.setBio(cursor.getString(9)); // bio
-            user.setPicture(cursor.getString(10));// picture
+//            user.setPicture(cursor.getString(10));// picture
 
         } else {
             Log.d("test", "couldn't get a user for selected id");
