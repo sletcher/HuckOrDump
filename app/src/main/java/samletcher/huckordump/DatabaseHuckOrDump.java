@@ -105,6 +105,7 @@ public class DatabaseHuckOrDump {
                     KEY_POSITION + " TEXT, " +
                     KEY_BIO + " TEXT, " +
                     KEY_PICTURE + " BLOB," +
+                    " FOREIGN KEY (" + KEY_ID +") REFERENCES " + TABLE_LOGIN + "(" + KEY_ID +")," +
                     " FOREIGN KEY (" + KEY_TEAM +") REFERENCES " + TABLE_TEAMS + "(" + KEY_TeamID + "));";
             db.execSQL(CREATE_USER_TABLE);
 
@@ -428,7 +429,7 @@ public class DatabaseHuckOrDump {
         values.put(KEY_PW, pw); // update the pw
 
         db.update(TABLE_LOGIN, values, KEY_UI + "= ?", new String[]{String.valueOf(user.getId())});
-        Log.e("update", "updated loginpw for loginuser");
+        Log.d("update", "updated loginpw for loginuser");
         db.close();
 
     }
@@ -442,9 +443,11 @@ public class DatabaseHuckOrDump {
         //TODO: Set this as a foreign key with CASCADE turned to on
         db.delete(TABLE_Users, KEY_ID + " = ?", new String[] {String.valueOf(user.getId())});
         db.delete(TABLE_LOGIN, KEY_ID + " = ?", new String[] {String.valueOf(user.getId())});
-        Log.e("database", "delete user from users table with id " + String.valueOf(user.getId()));
+        Log.e("database", "delete user from users/login table with id " + String.valueOf(user.getId()));
         db.close();
     }
+
+
 
 
     // get all the users
@@ -488,7 +491,7 @@ public class DatabaseHuckOrDump {
         Cursor cursor = db.rawQuery(query, null);
         cursor.close();
 
-        Log.e("count", "There are now a total of " + cursor.getCount() + " users");
+        Log.d("count", "There are now a total of " + cursor.getCount() + " users");
 
         return cursor.getCount();
     }
