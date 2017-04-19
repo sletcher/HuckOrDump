@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,13 +40,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static java.security.AccessController.getContext;
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+    private static String TAG = "TAG";
     public static final String INTENT_EXTRA_IS_REGISTER = "INTENT_EXTRA_IS_REGISTER";
     public static final String SHARED_PREF_USER_ID = "SHARED_PREF_USER_ID";
+    public static final String SHARED_PREF_NAME = "SHARED_PREF_NAME";
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -71,6 +75,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSharedPreferences(LoginActivity.SHARED_PREF_USER_ID, 0).edit().clear().apply();
+
         // create a new database
         try {
             db = new DatabaseHuckOrDump(this).open();
@@ -347,10 +354,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             LoginUser loginUser = db.getLoginUserFromEmail(mEmail);
 
             if (loginUser.getPw().equals(mPassword)) {
-                SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPref = mActivity.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt(SHARED_PREF_USER_ID, loginUser.getId());
                 editor.apply();
+                Log.e(TAG, "Set user id as: " + loginUser.getId());
                 return true;
             }
 
@@ -398,17 +406,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            if (db.userExists(mEmail)) {
-                return false;
+            LoginUser user = db.getLoginUserFromEmail(mEmail);
+
+            if (user.getEmail().equals(mEmail)) {
+                    return false;
             }
 
-            LoginUser user = new LoginUser(db.getUserId(), mEmail, mPassword);
-            db.addLogInUser(user);
+            LoginUser newUser = new LoginUser(db.getUserId(), mEmail, mPassword);
+            db.addLogInUser(newUser);
 
-            SharedPreferences sharedPref = mActivity.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = mActivity.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt(SHARED_PREF_USER_ID, user.getId());
-            editor.apply();
+            editor.putInt(SHARED_PREF_USER_ID, newUser.getId()).apply();
+            Log.d(TAG, "Set ID as: " + newUser.getId());
             return true;
         }
 

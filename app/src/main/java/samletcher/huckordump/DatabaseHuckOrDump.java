@@ -321,7 +321,7 @@ public class DatabaseHuckOrDump {
             values.put(KEY_TEAM, user.getTeam_id());
             values.put(KEY_POSITION, user.getPosition());
             values.put(KEY_BIO, user.getBio());
-            values.put(KEY_PICTURE, (String) null);
+            values.put(KEY_PICTURE, "");
 
             // insert the values for new user
             db.update(TABLE_Users, values, KEY_ID + " = ?", new String[]{String.valueOf(getUserId())});
@@ -385,7 +385,7 @@ public class DatabaseHuckOrDump {
             user.setTeam_id(Integer.parseInt(cursor.getString(7)));// team_id
             user.setPosition(cursor.getString(8)); // position
             user.setBio(cursor.getString(9)); // bio
-            user.setPicture(cursor.getString(10));// picture
+//            user.setPicture(cursor.getString(10));// picture
 
         } else {
             Log.d("test", "couldn't get a user for selected id");
@@ -399,12 +399,12 @@ public class DatabaseHuckOrDump {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String query =  "SELECT * FROM " + TABLE_LOGIN +
-                        " WHERE " + KEY_EM + " = '" + email + "';";
+                        " WHERE " + KEY_EM + " = '" + email + "'";
 
         Cursor cursor = db.rawQuery(query, null);
 
 
-        if (cursor.getCount()> 0) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst(); // move to the first object that matches the email
             LoginUser user = new LoginUser(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1),
@@ -413,7 +413,7 @@ public class DatabaseHuckOrDump {
             db.close();
             return user;
         } else {
-            return  new LoginUser(getUserId(), email, "");
+            return  new LoginUser(getUserId(), "", "");
         }
 
     }
@@ -429,7 +429,7 @@ public class DatabaseHuckOrDump {
         values.put(KEY_PW, pw); // update the pw
 
         db.update(TABLE_LOGIN, values, KEY_UI + "= ?", new String[]{String.valueOf(user.getId())});
-        Log.d("update", "updated loginpw for loginuser");
+        Log.e("update", "updated loginpw for loginuser");
         db.close();
 
     }

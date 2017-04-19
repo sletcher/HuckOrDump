@@ -22,6 +22,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class ProfileFragment extends Fragment {
+    private static String TAG = "TAG";
     private Unbinder unbinder;
     private DatabaseHuckOrDump db;
     private OnFragmentInteractionListener mListener;
@@ -73,11 +74,12 @@ public class ProfileFragment extends Fragment {
                 mUser.setInterest(0);
                 break;
         }
-        mUser.setTeam_id(Integer.parseInt(mPid.getText().toString()));
+        //mUser.setTeam_id(Integer.parseInt(mPid.getText().toString()));
         mUser.setPosition(mPosition.getText().toString());
 
         // add user to db
-        db.updateUser(mUser);
+        db.addUser(mUser);
+
         getActivity().finish();
         Intent intent = new Intent(getContext(), LoginActivity.class);
         getActivity().startActivity(intent);
@@ -86,16 +88,9 @@ public class ProfileFragment extends Fragment {
     @OnClick (R.id.profile_admin_button)
     public void adminButton() {
         List<User> users = db.getAllUsers();
-        Log.e("Test", users.toString());
-    }
-
-    @OnClick (R.id.profile_logout_button)
-    public void logoutButton() {
-        getContext().getSharedPreferences(LoginActivity.SHARED_PREF_USER_ID, 0).edit().clear().apply();
-
-        getActivity().finish();
-        Intent intent = new Intent(getContext(), LoginActivity.class);
-        getActivity().startActivity(intent);
+        for (User user : users) {
+            user.printUser();
+        }
     }
 
     @Override
@@ -109,13 +104,15 @@ public class ProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        int id = sharedPref.getInt(LoginActivity.SHARED_PREF_USER_ID, 0);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(LoginActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        int id = sharedPref.getInt(LoginActivity.SHARED_PREF_USER_ID, -1);
+        Log.e(TAG, "Read ID as: " + id);
 
         mUser = db.getUser(id);
-        updateFields(mUser);
 
         unbinder = ButterKnife.bind(this, view);
+
+        updateFields(mUser);
         return view;
     }
 
@@ -152,7 +149,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateFields(User user) {
-        if (user.getFirst_name() != "") {
+        if (!user.getFirst_name().equals("")) {
             mFirstName.setText(user.getFirst_name());
             mLastName.setText(user.getLast_name());
             mBio.setText(user.getBio());
