@@ -329,7 +329,8 @@ public class DatabaseHuckOrDump {
         ContentValues values = new ContentValues();
 
         if (userExists(user.getId())) {
-
+            Log.e("database", "updating user " + String.valueOf(user.getId()));
+            user.printUser();
 
             // add all the columns for the user while generating an id
             // ideally will want to figure out a way to generate a better id
@@ -346,8 +347,8 @@ public class DatabaseHuckOrDump {
             values.put(KEY_PICTURE, "");
 
             // insert the values for new user
-            db.update(TABLE_Users, values, KEY_ID + " = ?", new String[]{String.valueOf(getUserId())});
-            Log.e("database", "update user to user database");
+            db.update(TABLE_Users, values, KEY_ID + " = ?", new String[]{String.valueOf(user.getId())});
+
             db.close();
         } else {
             Log.d("Test", "Adding User");
@@ -382,7 +383,7 @@ public class DatabaseHuckOrDump {
                 +  " WHERE " + KEY_ID +  " = " + String.valueOf(id) +";";
 
         Cursor cursor = db.rawQuery(query, null);
-        Log.d("test", "the cursor is " + cursor.toString());
+
         return cursor.getCount() > 0;
     }
 
@@ -397,10 +398,10 @@ public class DatabaseHuckOrDump {
         User user = new User();
 
         if (cursor.getCount() > 0) {
-            Log.e("test", "count is greater than 0 when getting user");
+            Log.e("test", "able to read user id " + String.valueOf(id));
             cursor.moveToFirst();
 
-            user.setId(Integer.parseInt(cursor.getString(0))); // id
+            user.setId(Integer.parseInt(cursor.getString(0))); // id`
             user.setEmail(cursor.getString(1)); // email
             user.setPw(cursor.getString(2)); // pw
             user.setFirst_name(cursor.getString(3)); // first name
@@ -413,7 +414,7 @@ public class DatabaseHuckOrDump {
 //            user.setPicture(cursor.getString(10));// picture
 
         } else {
-            Log.d("test", "couldn't get a user for selected id");
+            Log.d("test", "couldn't get a user for selected id " + String.valueOf(id));
             user.setId(id);
         }
 

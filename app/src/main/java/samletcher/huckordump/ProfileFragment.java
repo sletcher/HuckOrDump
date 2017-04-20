@@ -77,7 +77,7 @@ public class ProfileFragment extends Fragment {
         //mUser.setTeam_id(Integer.parseInt(mPid.getText().toString()));
         mUser.setPosition(mPosition.getText().toString());
 
-        // add user to db
+        // add/update user to db
         db.updateUser(mUser);
 
         getActivity().finish();
