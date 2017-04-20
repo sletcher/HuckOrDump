@@ -78,7 +78,7 @@ public class ProfileFragment extends Fragment {
         mUser.setPosition(mPosition.getText().toString());
 
         // add user to db
-        db.addUser(mUser);
+        db.updateUser(mUser);
 
         getActivity().finish();
         Intent intent = new Intent(getContext(), LoginActivity.class);

@@ -330,6 +330,7 @@ public class DatabaseHuckOrDump {
 
         if (userExists(user.getId())) {
 
+
             // add all the columns for the user while generating an id
             // ideally will want to figure out a way to generate a better id
             values.put(KEY_ID, user.getId());
@@ -349,6 +350,7 @@ public class DatabaseHuckOrDump {
             Log.e("database", "update user to user database");
             db.close();
         } else {
+            Log.d("Test", "Adding User");
             addUser(user);
         }
     }
@@ -371,6 +373,7 @@ public class DatabaseHuckOrDump {
 
     // returns whether a user exists already in the database
     public boolean userExists(int id) {
+        Log.d("test", "checking to see if user exists " + String.valueOf(id));
         // get the database
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -379,7 +382,8 @@ public class DatabaseHuckOrDump {
                 +  " WHERE " + KEY_ID +  " = " + String.valueOf(id) +";";
 
         Cursor cursor = db.rawQuery(query, null);
-        return cursor != null;
+        Log.d("test", "the cursor is " + cursor.toString());
+        return cursor.getCount() > 0;
     }
 
 
